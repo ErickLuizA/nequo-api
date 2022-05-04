@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:13
+    container_name: nequo_database
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=nequo
+      - POSTGRES_PASSWORD=nequo
+      - POSTGRES_DB=nequo
+
+  test_database:
+    image: postgres:13
+    container_name: nequo_test_database
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=nequo_test
+      - POSTGRES_PASSWORD=nequo_test
+      - POSTGRES_DB=nequo_test
