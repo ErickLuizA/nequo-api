@@ -1,4 +1,3 @@
-import Logger from '@ioc:Adonis/Core/Logger'
 import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Quote from './Quote'
@@ -20,8 +19,6 @@ export default class QuoteOfTheDay extends BaseModel {
   public quote: BelongsTo<typeof Quote>
 
   public isNotToday(): boolean {
-    Logger.debug('isNotToday', DateTime.local().toJSON())
-
-    return this.createdAt.diffNow().days > 1
+    return this.createdAt.toISODate() !== DateTime.local().toISODate()
   }
 }

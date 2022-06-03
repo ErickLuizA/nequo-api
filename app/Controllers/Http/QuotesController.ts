@@ -9,7 +9,7 @@ export default class QuotesController {
     try {
       const quotes = await Quote.query().paginate(
         request.input('page', 1),
-        request.input('perPage', 20)
+        request.input('per_page', 20)
       )
 
       return response.status(200).json(quotes)
@@ -30,7 +30,7 @@ export default class QuotesController {
 
   public async quoteOfTheDay({ response }: HttpContextContract) {
     try {
-      const quote = await QuoteOfTheDay.query().first()
+      const quote = await QuoteOfTheDay.query().orderBy('created_at', 'desc').first()
 
       await quote?.load('quote')
 
