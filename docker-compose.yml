@@ -1,11 +1,32 @@
 version: '3.9'
 
 services:
+  app:
+    container_name: nequo_app
+    restart: always
+    depends_on:
+      - database
+    build:
+      context: .
+      target: dependencies
+    ports:
+      - ${PORT}:${PORT}
+      - 9229:9229
+    env_file:
+      - .env
+    environment:
+      - PG_HOST=database
+    volumes:
+      - ./:/home/node/app
+    command: node ace serve --watch --node-args="--inspect=0.0.0.0"
+
   database:
     image: postgres:13
     container_name: nequo_database
     ports:
       - "5432:5432"
+    volumes:
+      - database_volume:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=nequo
       - POSTGRES_PASSWORD=nequo
@@ -20,3 +41,6 @@ services:
       - POSTGRES_USER=nequo_test
       - POSTGRES_PASSWORD=nequo_test
       - POSTGRES_DB=nequo_test
+
+volumes:
+  database_volume:

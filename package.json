@@ -8,8 +8,16 @@
     "start": "node server.js",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
+    "test": "node ace test",
+    "test:unit": "node ace test unit",
+    "test:func": "node ace test functional",
+    "migration": "node ace migration:run",
+    "seed": "node ace db:seed",
     "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "docker:attach": "docker exec -it nequo_app /bin/sh",
+    "docker:attach:db": "docker exec -it nequo_database /bin/sh",
+    "docker:logs": "docker logs -f nequo_app"
   },
   "eslintConfig": {
     "extends": [
