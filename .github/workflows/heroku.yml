@@ -17,7 +17,7 @@ jobs:
         run: yarn test:unit
 
       - name: Build, Push and Release a Docker container to Heroku.
-      - run: echo "worked?"
+        run: echo "worked?"
         # uses: gonuit/heroku-docker-deploy@v1.3.3
         # with:
         #   email: ${{ secrets.HEROKU_EMAIL }}
