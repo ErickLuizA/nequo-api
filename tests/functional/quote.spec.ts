@@ -5,7 +5,7 @@ const quoteOfTheDayProperties = ['id', 'quote_id', 'created_at', 'updated_at']
 
 test.group('Quotes', () => {
   test('should get paginated quotes', async ({ client, assert }) => {
-    const response = await client.get(`/api/v1/quotes?page=2&perPage=10`)
+    const response = await client.get(`/api/v1/quotes?page=2&per_page=10`)
 
     assert.properties(response.body().data[0], quoteProperties)
     response.assertStatus(200)
