@@ -20,5 +20,3 @@ Event.on('db:query', (query) => {
     Database.prettyPrint(query)
   }
 })
-
-Event.on('new:quote_of_the_day', 'QuoteOfTheDay.onNewQuoteOfTheDay')

@@ -5,8 +5,6 @@
  * file.
  */
 
-import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
-
 declare module '@ioc:Adonis/Core/Event' {
   /*
   |--------------------------------------------------------------------------
@@ -27,7 +25,4 @@ declare module '@ioc:Adonis/Core/Event' {
   | an instance of the the UserModel only.
   |
   */
-  interface EventsList {
-    'new:quote_of_the_day': QuoteOfTheDay | null
-  }
 }

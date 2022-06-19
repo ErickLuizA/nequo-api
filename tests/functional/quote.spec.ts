@@ -1,4 +1,6 @@
 import { test } from '@japa/runner'
+import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
+import { DateTime } from 'luxon'
 
 const quoteProperties = ['id', 'content', 'author', 'author_slug', 'created_at', 'updated_at']
 const quoteOfTheDayProperties = ['id', 'quote_id', 'created_at', 'updated_at']
@@ -36,6 +38,27 @@ test.group('Quotes', () => {
     response.assertBodyContains({
       id: 1,
     })
+  })
+
+  test('should get new quote of the day if last quote of the day is not today', async ({
+    client,
+    assert,
+  }) => {
+    const response = await client.get(`/api/v1/quotes/quote_of_the_day`)
+
+    assert.properties(response.body(), quoteOfTheDayProperties)
+    response.assertStatus(200)
+    response.assertBodyContains({
+      id: 2,
+    })
+  }).setup(async () => {
+    const quoteOfTheDay = await QuoteOfTheDay.find(1)
+
+    if (quoteOfTheDay) {
+      quoteOfTheDay.createdAt = DateTime.local().minus({ days: 1 })
+
+      await quoteOfTheDay?.save()
+    }
   })
 
   test('should get random quote', async ({ client, assert }) => {

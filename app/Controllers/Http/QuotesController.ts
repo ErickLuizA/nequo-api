@@ -1,4 +1,3 @@
-import Event from '@ioc:Adonis/Core/Event'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Quote from 'App/Models/Quote'
 import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
@@ -30,13 +29,24 @@ export default class QuotesController {
 
   public async quoteOfTheDay({ response }: HttpContextContract) {
     try {
-      const quote = await QuoteOfTheDay.query().orderBy('created_at', 'desc').first()
+      let quoteOfTheDay = await QuoteOfTheDay.query().orderBy('created_at', 'desc').first()
 
-      await quote?.load('quote')
+      if (!quoteOfTheDay || quoteOfTheDay?.isNotToday()) {
+        const newQuote = await Quote.query()
+          .whereNotIn('id', (query) => {
+            query.select('quote_id').from('quote_of_the_days')
+          })
+          .orderByRaw('RANDOM()')
+          .first()
 
-      Event.emit('new:quote_of_the_day', quote)
+        if (newQuote) {
+          quoteOfTheDay = await QuoteOfTheDay.create({ quoteId: newQuote.id })
+        }
+      }
 
-      return response.status(200).json(quote)
+      await quoteOfTheDay?.load('quote')
+
+      return response.status(200).json(quoteOfTheDay)
     } catch (error) {
       return response.json({ error: error.message })
     }
