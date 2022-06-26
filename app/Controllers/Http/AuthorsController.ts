@@ -1,14 +1,14 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Author from 'App/Models/Author'
+import { orderRequest } from 'Utils/request'
 
 export default class AuthorsController {
   public async index({ request, response }: HttpContextContract) {
     try {
-      const authors = await Author.query().paginate(
-        request.input('page', 1),
-        request.input('per_page', 20)
-      )
+      const authors = await Author.query()
+        .orderBy(orderRequest(request))
+        .paginate(request.input('page', 1), request.input('per_page', 20))
 
       return response.status(200).json(authors)
     } catch (error) {

@@ -2,6 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Quote from 'App/Models/Quote'
 import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
 import SearchQuoteService from 'App/Services/SearchQuoteService'
+import { orderRequest } from 'Utils/request'
 
 export default class QuotesController {
   public async index({ request, response }: HttpContextContract) {
@@ -11,6 +12,7 @@ export default class QuotesController {
         .preload('tags', (builder) => {
           builder.preload('tag')
         })
+        .orderBy(orderRequest(request))
         .paginate(request.input('page', 1), request.input('per_page', 20))
 
       return response.status(200).json(quotes)
