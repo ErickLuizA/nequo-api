@@ -1,14 +1,11 @@
-import { RequestContract } from '@ioc:Adonis/Core/Request'
 import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import Quote from 'App/Models/Quote'
 
 export default class SearchQuoteService {
-  constructor(private readonly request: RequestContract) {}
-
-  public async execute(): Promise<ModelQueryBuilderContract<typeof Quote, Quote>> {
+  public async execute(
+    queryString: Record<string, any>
+  ): Promise<ModelQueryBuilderContract<typeof Quote, Quote>> {
     try {
-      const queryString = this.request.qs()
-
       const quotes = Quote.query()
         .preload('author')
         .preload('tags', (builder) => {

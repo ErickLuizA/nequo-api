@@ -85,9 +85,9 @@ export default class QuotesController {
 
   public async search({ response, request }: HttpContextContract) {
     try {
-      const searchQuoteService = new SearchQuoteService(request)
+      const searchQuoteService = new SearchQuoteService()
 
-      const quotes = await searchQuoteService.execute()
+      const quotes = await searchQuoteService.execute(request.qs())
 
       return response.status(200).json(quotes)
     } catch (error) {
