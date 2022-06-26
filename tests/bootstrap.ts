@@ -50,12 +50,12 @@ export const runnerHooks: Required<Pick<Config, 'setup' | 'teardown'>> = {
   setup: [
     () => TestUtils.ace().loadCommands(),
     () => {
-      if (process.env.TEST_SUITE === 'functional') {
+      if (process.env.TEST_SUITE === 'functional' || process.env.TEST_SUITE === 'all') {
         return TestUtils.db().migrate()
       }
     },
     () => {
-      if (process.env.TEST_SUITE === 'functional') {
+      if (process.env.TEST_SUITE === 'functional' || process.env.TEST_SUITE === 'all') {
         return TestUtils.db().seed()
       }
     },
