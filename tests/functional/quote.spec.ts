@@ -1,15 +1,23 @@
 import { test } from '@japa/runner'
+import Quote from 'App/Models/Quote'
 import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
+import QuoteTag from 'App/Models/QuoteTag'
 import { DateTime } from 'luxon'
 
-const quoteProperties = ['id', 'content', 'author', 'author_slug', 'created_at', 'updated_at']
-const quoteOfTheDayProperties = ['id', 'quote_id', 'created_at', 'updated_at']
+const quoteProperties = ['id', 'content', 'author_id', 'author', 'tags', 'created_at', 'updated_at']
+const quoteOfTheDayProperties = ['id', 'quote_id', 'quote', 'created_at', 'updated_at']
 
 test.group('Quotes', () => {
-  test('should get paginated quotes', async ({ client, assert }) => {
-    const response = await client.get(`/api/v1/quotes?page=2&per_page=10`)
+  test('should get paginated and ordered quotes', async ({ client, assert }) => {
+    const response = await client.get(
+      `/api/v1/quotes?page=2&per_page=10&order_by=created_at&order=asc`
+    )
 
     assert.properties(response.body().data[0], quoteProperties)
+    assert.isAbove(
+      new Date(response.body().data[1].created_at),
+      new Date(response.body().data[0].created_at)
+    )
     response.assertStatus(200)
     response.assertBodyContains({
       meta: {
@@ -68,14 +76,32 @@ test.group('Quotes', () => {
     response.assertStatus(200)
   })
 
-  test('should get quotes by author', async ({ client, assert }) => {
-    const response = await client.get(`/api/v1/quotes/author/richard-feynman`)
+  test('should search quotes', async ({ client, assert }) => {
+    const response = await client.get(`/api/v1/quotes/search?q=Testing&authors=1&tags=1,2`)
 
-    assert.properties(response.body().data[0], quoteProperties)
+    assert.properties(response.body()[0], quoteProperties)
+    assert.deepEqual(response.body()[0].content, 'Testing Content')
+    assert.deepEqual(response.body()[0].author_id, 1)
+    assert.deepEqual(response.body()[0].tags[0].tag_id, 1)
+    assert.deepEqual(response.body()[0].tags[1].tag_id, 2)
+
     response.assertStatus(200)
-    response.assertBodyContains({
-      meta: {},
-      data: [],
+    response.assertBodyContains([])
+  }).setup(async () => {
+    const quote = await Quote.create({
+      authorId: 1,
+      content: 'Testing Content',
     })
+
+    await QuoteTag.createMany([
+      {
+        quoteId: quote.id,
+        tagId: 1,
+      },
+      {
+        quoteId: quote.id,
+        tagId: 2,
+      },
+    ])
   })
 })

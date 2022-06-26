@@ -11,7 +11,7 @@ export default class Quote extends BaseModel {
   public content: string
 
   @column()
-  public authorId: string
+  public authorId: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

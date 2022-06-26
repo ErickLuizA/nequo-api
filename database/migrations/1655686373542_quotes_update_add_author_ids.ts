@@ -18,8 +18,8 @@ export default class QuotesUpdateAddAuthorIds extends BaseSchema {
       table.dropForeign('author_id')
       table.dropColumn('author_id')
 
-      table.string('author').notNullable()
-      table.string('author_slug').notNullable()
+      table.string('author').notNullable().defaultTo('')
+      table.string('author_slug').notNullable().defaultTo('')
     })
   }
 }
