@@ -8,7 +8,7 @@
     "start": "node server.js",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
-    "test": "TEST_SUITE=all node ace test",
+    "test": "yarn docker:up:test && TEST_SUITE=all node ace test",
     "test:unit": "TEST_SUITE=unit node ace test unit",
     "test:func": "yarn docker:up:test && TEST_SUITE=functional node ace test functional",
     "migration": "node ace migration:run",
