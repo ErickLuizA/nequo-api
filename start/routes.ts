@@ -30,8 +30,16 @@ Route.group(() => {
 
     Route.get('/quotes/random', 'QuotesController.random')
 
-    Route.get('/quotes/author/:author', 'QuotesController.author')
+    Route.get('/quotes/search', 'QuotesController.search')
 
     Route.resource('/quotes', 'QuotesController').only(['index', 'show'])
+
+    Route.get('/authors/:id/quotes', 'AuthorsController.quotes')
+
+    Route.resource('/authors', 'AuthorsController').only(['index', 'show'])
+
+    Route.get('/tags/:id/quotes', 'TagsController.quotes')
+
+    Route.resource('/tags', 'TagsController').only(['index', 'show'])
   }).prefix('v1')
 }).prefix('api')

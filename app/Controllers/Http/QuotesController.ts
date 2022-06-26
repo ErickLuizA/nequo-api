@@ -1,19 +1,21 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Quote from 'App/Models/Quote'
 import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
-import { slugify } from 'Utils/slugify'
+import SearchQuoteService from 'App/Services/SearchQuoteService'
 
 export default class QuotesController {
   public async index({ request, response }: HttpContextContract) {
     try {
-      const quotes = await Quote.query().paginate(
-        request.input('page', 1),
-        request.input('per_page', 20)
-      )
+      const quotes = await Quote.query()
+        .preload('author')
+        .preload('tags', (builder) => {
+          builder.preload('tag')
+        })
+        .paginate(request.input('page', 1), request.input('per_page', 20))
 
       return response.status(200).json(quotes)
     } catch (error) {
-      return response.json({ error: error.message })
+      return response.status(400).json({ error: error.message })
     }
   }
 
@@ -21,9 +23,15 @@ export default class QuotesController {
     try {
       const quote = await Quote.findOrFail(params.id)
 
+      await quote.load('author')
+
+      await quote.load('tags', (builder) => {
+        builder.preload('tag')
+      })
+
       return response.status(200).json(quote)
     } catch (error) {
-      return response.json({ error: error.message })
+      return response.status(400).json({ error: error.message })
     }
   }
 
@@ -44,33 +52,44 @@ export default class QuotesController {
         }
       }
 
-      await quoteOfTheDay?.load('quote')
+      await quoteOfTheDay?.load('quote', (builder) => {
+        builder.preload('author')
+        builder.preload('tags', (tagsBuilder) => {
+          tagsBuilder.preload('tag')
+        })
+      })
 
       return response.status(200).json(quoteOfTheDay)
     } catch (error) {
-      return response.json({ error: error.message })
+      return response.status(400).json({ error: error.message })
     }
   }
 
   public async random({ response }: HttpContextContract) {
     try {
-      const quote = await Quote.query().orderByRaw('RANDOM()').first()
+      const quote = await Quote.query()
+        .preload('author')
+        .preload('tags', (builder) => {
+          builder.preload('tag')
+        })
+        .orderByRaw('RANDOM()')
+        .first()
 
       return response.status(200).json(quote)
     } catch (error) {
-      return response.json({ error: error.message })
+      return response.status(400).json({ error: error.message })
     }
   }
 
-  public async author({ params, request, response }: HttpContextContract) {
+  public async search({ response, request }: HttpContextContract) {
     try {
-      const quotes = await Quote.query()
-        .where('author_slug', 'LIKE', `%${slugify(params.author)}%`)
-        .paginate(request.input('page', 1), request.input('perPage', 20))
+      const searchQuoteService = new SearchQuoteService(request)
+
+      const quotes = await searchQuoteService.execute()
 
       return response.status(200).json(quotes)
     } catch (error) {
-      return response.json({ error: error.message })
+      return response.status(400).json({ error: error.message })
     }
   }
 }

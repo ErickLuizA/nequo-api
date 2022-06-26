@@ -12,7 +12,8 @@
     "Config": "config",
     "Database": "database",
     "Contracts": "contracts",
-    "Utils": "utils"
+    "Utils": "utils",
+    "Services": "services"
   },
   "preloads": [
     "./start/routes",
