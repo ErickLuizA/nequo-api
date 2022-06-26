@@ -1,8 +1,6 @@
 name: Test and Deploy to Heroku
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -13,14 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # yarn test:unit for now
-      # Change to yarn test later when we have working functional tests
       - name: Test
         run: |
           npm ci
           touch .env
           docker-compose --env-file .env.test up -d
-          yarn test:unit
+          yarn test
 
       - name: Build, Push and Release a Docker container to Heroku.
         uses: gonuit/heroku-docker-deploy@v1.3.3
