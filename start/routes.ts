@@ -43,3 +43,10 @@ Route.group(() => {
     Route.resource('/tags', 'TagsController').only(['index', 'show'])
   }).prefix('v1')
 }).prefix('api')
+
+Route.get('/', async ({ view }) => {
+  return view.render('home')
+})
+
+// secondary: #9e9e9e
+// primary: #7b1fa2
