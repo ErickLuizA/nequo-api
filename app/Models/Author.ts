@@ -15,6 +15,9 @@ export default class Author extends BaseModel {
   })
   public slug: string
 
+  @column()
+  public bio: string
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

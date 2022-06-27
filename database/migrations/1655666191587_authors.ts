@@ -10,6 +10,8 @@ export default class Authors extends BaseSchema {
       table.string('name').unique().notNullable()
       table.string('slug').unique().notNullable()
 
+      table.text('bio').defaultTo('')
+
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

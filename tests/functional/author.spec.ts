@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 
-const authorProperties = ['id', 'name', 'slug', 'created_at', 'updated_at']
+const authorProperties = ['id', 'name', 'slug', 'bio', 'created_at', 'updated_at']
 
 test.group('Authors', () => {
   test('should be able to get paginated and ordered list of authors', async ({

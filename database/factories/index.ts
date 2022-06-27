@@ -8,7 +8,7 @@ import Crypto from 'node:crypto'
 export const AuthorFactory = Factory.define(Author, ({ faker }) => {
   const name = faker.name.firstName() + Crypto.randomUUID().slice(0, 4)
 
-  return { name, slug: name }
+  return { name, slug: name, bio: faker.lorem.paragraph() }
 })
   .relation('quotes', () => QuoteFactory)
   .build()
