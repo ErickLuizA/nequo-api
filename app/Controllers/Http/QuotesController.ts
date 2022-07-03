@@ -2,7 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Quote from 'App/Models/Quote'
 import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
 import SearchQuoteService from 'App/Services/SearchQuoteService'
-import { createOrder, createPagination } from 'Utils/request'
+import { createOrder, createPagination, createSearch } from 'Utils/request'
 
 export default class QuotesController {
   public async index({ request, response }: HttpContextContract) {
@@ -11,6 +11,7 @@ export default class QuotesController {
       .preload('tags', (builder) => {
         builder.preload('tag')
       })
+      .where((builder) => createSearch(request, builder, Quote.searchableColumns))
       .orderBy(...createOrder(request, Quote.sortableColumns))
       .paginate(...createPagination(request))
 

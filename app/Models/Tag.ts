@@ -21,4 +21,6 @@ export default class Tag extends BaseModel {
   public updatedAt: DateTime
 
   public static sortableColumns: string[] = ['id', 'name', 'slug', 'created_at', 'updated_at']
+
+  public static searchableColumns: string[] = ['name', 'slug']
 }

@@ -28,4 +28,6 @@ export default class Author extends BaseModel {
   public quotes: HasMany<typeof Quote>
 
   public static sortableColumns: string[] = ['id', 'name', 'slug', 'created_at', 'updated_at']
+
+  public static searchableColumns: string[] = ['name', 'slug', 'bio']
 }

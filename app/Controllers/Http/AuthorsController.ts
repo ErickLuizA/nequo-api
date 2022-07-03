@@ -1,11 +1,12 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Author from 'App/Models/Author'
-import { createOrder, createPagination } from 'Utils/request'
+import { createOrder, createPagination, createSearch } from 'Utils/request'
 
 export default class AuthorsController {
   public async index({ request, response }: HttpContextContract) {
     const authors = await Author.query()
+      .where((builder) => createSearch(request, builder, Author.searchableColumns))
       .orderBy(...createOrder(request, Author.sortableColumns))
       .paginate(...createPagination(request))
 

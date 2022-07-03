@@ -1,4 +1,5 @@
 import { RequestContract } from '@ioc:Adonis/Core/Request'
+import { BaseModel, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 
 const defaultSortableColumns = ['id', 'created_at', 'updated_at']
 const orders = ['asc', 'desc']
@@ -33,4 +34,23 @@ export function createPagination(request: RequestContract): [number, number] {
   const finalPerPage = isNaN(perPage) ? defaultPerPage : perPage > 0 ? perPage : defaultPerPage
 
   return [finalPage, finalPerPage]
+}
+
+export function createSearch(
+  request: RequestContract,
+  builder: ModelQueryBuilderContract<typeof BaseModel, any>,
+  searchableColumns: string[] = []
+) {
+  const search = request.qs().search
+  const searchBy = request.qs().search_by
+
+  if (!search || !searchBy) {
+    return
+  }
+
+  if (!searchableColumns.includes(searchBy)) return
+
+  return builder.where((builder) => {
+    builder.where(searchBy, 'ilike', `%${search}%`)
+  })
 }

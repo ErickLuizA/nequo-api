@@ -26,4 +26,6 @@ export default class Quote extends BaseModel {
   public tags: HasMany<typeof QuoteTag>
 
   public static sortableColumns: string[] = ['id', 'author_id', 'created_at', 'updated_at']
+
+  public static searchableColumns: string[] = ['content']
 }

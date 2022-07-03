@@ -1,11 +1,12 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import QuoteTag from 'App/Models/QuoteTag'
 import Tag from 'App/Models/Tag'
-import { createOrder, createPagination } from 'Utils/request'
+import { createOrder, createPagination, createSearch } from 'Utils/request'
 
 export default class TagsController {
   public async index({ request, response }: HttpContextContract) {
     const tags = await Tag.query()
+      .where((builder) => createSearch(request, builder, Tag.searchableColumns))
       .orderBy(...createOrder(request, Tag.sortableColumns))
       .paginate(...createPagination(request))
 
