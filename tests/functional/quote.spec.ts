@@ -1,4 +1,5 @@
 import { test } from '@japa/runner'
+import { ExceptionCode, ExceptionMessage } from 'App/Constants/Exception'
 import Quote from 'App/Models/Quote'
 import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
 import QuoteTag from 'App/Models/QuoteTag'
@@ -45,6 +46,16 @@ test.group('Quotes', () => {
     response.assertStatus(200)
     response.assertBodyContains({
       id: 1,
+    })
+  })
+
+  test('should fail to get quote by id if it does not exist', async ({ client }) => {
+    const response = await client.get(`/api/v1/quotes/4984348`)
+
+    response.assertStatus(404)
+    response.assertBodyContains({
+      code: ExceptionCode.E_ROW_NOT_FOUND,
+      message: ExceptionMessage.E_ROW_NOT_FOUND,
     })
   })
 

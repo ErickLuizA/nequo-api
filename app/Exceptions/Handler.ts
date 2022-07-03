@@ -15,9 +15,24 @@
 
 import Logger from '@ioc:Adonis/Core/Logger'
 import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { exceptionCodeToMessageMap } from 'App/Constants/Exception'
 
 export default class ExceptionHandler extends HttpExceptionHandler {
   constructor() {
     super(Logger)
+  }
+
+  public async handle(error, ctx: HttpContextContract) {
+    if (!exceptionCodeToMessageMap[error.code]) {
+      return super.handle(error, ctx)
+    }
+
+    const { code, status, message } = exceptionCodeToMessageMap[error.code]
+
+    return ctx.response.status(status).json({
+      code,
+      message,
+    })
   }
 }

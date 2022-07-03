@@ -26,4 +26,6 @@ export default class Author extends BaseModel {
 
   @hasMany(() => Quote)
   public quotes: HasMany<typeof Quote>
+
+  public static sortableColumns: string[] = ['id', 'name', 'slug', 'created_at', 'updated_at']
 }

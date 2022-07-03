@@ -19,4 +19,6 @@ export default class Tag extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  public static sortableColumns: string[] = ['id', 'name', 'slug', 'created_at', 'updated_at']
 }

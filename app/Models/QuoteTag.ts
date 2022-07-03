@@ -24,4 +24,6 @@ export default class QuoteTag extends BaseModel {
 
   @belongsTo(() => Tag)
   public tag: BelongsTo<typeof Tag>
+
+  public static sortableColumns: string[] = ['id', 'quote_id', 'tag_id', 'created_at', 'updated_at']
 }

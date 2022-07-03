@@ -24,4 +24,6 @@ export default class Quote extends BaseModel {
 
   @hasMany(() => QuoteTag)
   public tags: HasMany<typeof QuoteTag>
+
+  public static sortableColumns: string[] = ['id', 'author_id', 'created_at', 'updated_at']
 }

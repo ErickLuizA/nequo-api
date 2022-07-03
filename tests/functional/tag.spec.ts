@@ -1,4 +1,5 @@
 import { test } from '@japa/runner'
+import { ExceptionCode, ExceptionMessage } from 'App/Constants/Exception'
 
 const tagProperties = ['id', 'name', 'slug', 'created_at', 'updated_at']
 const quoteTagProperties = ['id', 'quote_id', 'tag_id', 'tag', 'quote', 'created_at', 'updated_at']
@@ -27,6 +28,16 @@ test.group('Tags', () => {
     assert.properties(response.body(), tagProperties)
     response.assertStatus(200)
     response.assertBodyContains({ id: 1 })
+  })
+
+  test('should fail to get tag by id if it does not exist', async ({ client }) => {
+    const response = await client.get(`/api/v1/tags/4984348`)
+
+    response.assertStatus(404)
+    response.assertBodyContains({
+      code: ExceptionCode.E_ROW_NOT_FOUND,
+      message: ExceptionMessage.E_ROW_NOT_FOUND,
+    })
   })
 
   test('should be able to get tag quotes', async ({ client, assert }) => {
