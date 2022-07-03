@@ -33,7 +33,7 @@ export function createPagination(request: RequestContract): [number, number] {
   const finalPage = isNaN(page) ? defaultPage : page > 0 ? page : defaultPage
   const finalPerPage = isNaN(perPage) ? defaultPerPage : perPage > 0 ? perPage : defaultPerPage
 
-  return [finalPage, finalPerPage]
+  return [Number(finalPage), Number(finalPerPage)]
 }
 
 export function createSearch(
@@ -50,7 +50,9 @@ export function createSearch(
 
   if (!searchableColumns.includes(searchBy)) return
 
-  return builder.where((builder) => {
+  builder.where((builder) => {
     builder.where(searchBy, 'ilike', `%${search}%`)
   })
+
+  return true
 }
