@@ -11,6 +11,7 @@
     "test": "yarn docker:up:test && TEST_SUITE=all node ace test",
     "test:unit": "TEST_SUITE=unit node ace test unit",
     "test:func": "yarn docker:up:test && TEST_SUITE=functional node ace test functional",
+    "db:reset": "node ace db:wipe && node ace migration:run && node ace db:seed",
     "migration": "node ace migration:run",
     "seed": "node ace db:seed",
     "docker:up:test": "docker-compose up -d test_database",
