@@ -15,7 +15,6 @@ export default class TagsController {
 
   public async show({ params, response }: HttpContextContract) {
     const tag = await Tag.findOrFail(params.id)
-
     return response.status(200).json(tag)
   }
 
