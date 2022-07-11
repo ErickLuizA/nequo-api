@@ -18,7 +18,17 @@ services:
       - PG_HOST=database
     volumes:
       - ./:/home/node/app
-    command: node ace serve --watch --node-args="--inspect=0.0.0.0"
+    command: node ace serve --watch --no-assets
+
+  encore:
+    image: nequo-api_app
+    container_name: nequo_app_encore
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/home/node/app
+    command: npx encore dev-server --host 0.0.0.0 --port 8080
 
   database:
     image: postgres:13

@@ -45,8 +45,17 @@ Route.group(() => {
 }).prefix('api')
 
 Route.get('/', async ({ view }) => {
-  return view.render('home')
+  return view.render('pages/home')
 })
 
-// secondary: #9e9e9e
-// primary: #7b1fa2
+Route.get('/quotes', async ({ view }) => {
+  return view.render('pages/quotes')
+})
+
+Route.get('/authors', async ({ view }) => {
+  return view.render('pages/authors')
+})
+
+Route.get('/tags', async ({ view }) => {
+  return view.render('pages/tags')
+})
