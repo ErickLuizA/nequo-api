@@ -1,4 +1,5 @@
 import { RequestContract } from '@ioc:Adonis/Core/Request'
+import { RouteNode } from '@ioc:Adonis/Core/Route'
 import { BaseModel, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 
 const defaultSortableColumns = ['id', 'created_at', 'updated_at']
@@ -55,4 +56,14 @@ export function createSearch(
   })
 
   return true
+}
+
+export function isApiRequest(route: RouteNode | undefined) {
+  if (!route) {
+    return true
+  }
+
+  const match = route.pattern.match(/^\/api\//)
+
+  return match ? true : false
 }

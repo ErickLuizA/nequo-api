@@ -1,0 +1,41 @@
+@layout('layouts/main')
+
+@set('data', quotes)
+
+@section('body')
+
+@include('partials/tabs')
+
+@!component('components/search-input', {
+placeholder: 'Search quotes...',
+action: route('quotes.index'),
+value: request.qs().search,
+search_by: 'content'
+})
+
+<div class="data-table-target" up-main>
+  @component('components/data-table', {
+  columns: ['Id', 'Content', 'Author', 'Tags', 'Created', 'Updated'],
+  values: quotes,
+  })
+  @slot('main', data)
+
+  @!component('components/data-table-row', { value: data.id, href: route('quotes.edit', [data.id]) })
+  @!component('components/data-table-row', { value: data.content, href: route('quotes.edit', [data.id]) })
+  @!component('components/data-table-row', { value: data.author.name, href: route('quotes.edit', [data.id]) })
+  @!component('components/data-table-row', { value: data.tags.map(tag => tag.tag.name), isArray: true, href:
+  route('quotes.edit',[data.id]) })
+  @!component('components/data-table-row', { value: data.createdAt.toRelative({style:'short'}), href:
+  route('quotes.edit',
+  [data.id]) })
+  @!component('components/data-table-row', { value: data.updatedAt.toRelative({style:'short'}), href:
+  route('quotes.edit',
+  [data.id]) })
+
+  @end
+  @end
+
+  @include('partials/pagination')
+
+</div>
+@endsection

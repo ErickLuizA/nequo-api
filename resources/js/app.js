@@ -1,18 +1,22 @@
-// app entrypoint
+import 'unpoly'
+import 'unpoly/unpoly.css'
+import '../css/app.css'
 import feather from 'feather-icons'
 
-feather.replace({ class: 'icon' })
+up.compiler('main', () => {
+  feather.replace({ class: 'icon' })
+})
 
-const tabs = document.querySelectorAll('.tab')
-
-tabs.forEach((tab) => {
+up.compiler('.tab', (element) => {
   const currentPage = window.location.pathname
 
-  if (tab.getAttribute('href') === currentPage) {
-    tab.classList.add('active')
-    tab.classList.remove('inactive')
+  const elementHref = element.getAttribute('href')
+
+  if (elementHref === currentPage) {
+    element.classList.add('active-tab')
+    element.classList.remove('inactive-tab')
   } else {
-    tab.classList.remove('active')
-    tab.classList.add('inactive')
+    element.classList.add('inactive-tab')
+    element.classList.remove('active-tab')
   }
 })

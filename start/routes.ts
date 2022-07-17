@@ -24,38 +24,40 @@ Route.group(() => {
   Route.group(() => {
     Route.get('/', async () => {
       return { message: 'Hello World!' }
-    })
+    }).as('hello_world')
 
-    Route.get('/quotes/quote_of_the_day', 'QuotesController.quoteOfTheDay')
+    Route.get('/quotes/quote_of_the_day', 'QuotesController.quoteOfTheDay').as(
+      'quotes.quote_of_the_day'
+    )
 
-    Route.get('/quotes/random', 'QuotesController.random')
+    Route.get('/quotes/random', 'QuotesController.random').as('quotes.random')
 
-    Route.get('/quotes/search', 'QuotesController.search')
+    Route.get('/quotes/search', 'QuotesController.search').as('quotes.search')
 
     Route.resource('/quotes', 'QuotesController').only(['index', 'show'])
 
-    Route.get('/authors/:id/quotes', 'AuthorsController.quotes')
+    Route.get('/authors/:id/quotes', 'AuthorsController.quotes').as('authors.quotes')
 
     Route.resource('/authors', 'AuthorsController').only(['index', 'show'])
 
-    Route.get('/tags/:id/quotes', 'TagsController.quotes')
+    Route.get('/tags/:id/quotes', 'TagsController.quotes').as('tags.quotes')
 
     Route.resource('/tags', 'TagsController').only(['index', 'show'])
   }).prefix('v1')
-}).prefix('api')
+})
+  .prefix('api')
+  .as('api')
 
 Route.get('/', async ({ view }) => {
   return view.render('pages/home')
 })
 
-Route.get('/quotes', async ({ view }) => {
-  return view.render('pages/quotes')
-})
+Route.resource('/quotes', 'QuotesController').only(['index', 'show', 'create', 'edit', 'destroy'])
 
 Route.get('/authors', async ({ view }) => {
-  return view.render('pages/authors')
+  return view.render('pages/authors/index')
 })
 
 Route.get('/tags', async ({ view }) => {
-  return view.render('pages/tags')
+  return view.render('pages/tags/index')
 })

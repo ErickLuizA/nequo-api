@@ -1,0 +1,9 @@
+<td class='p-5 rounded-md' up-expand>
+  @if(isArray)
+  @each(val in value)
+  <a class="text-lg" up-layer="new" href="{{ href }}">{{ val }}</a>
+  @endeach
+  @else
+  <a class="text-lg" up-layer="new" href="{{ href }}">{{ value }}</a>
+  @endif
+</td>

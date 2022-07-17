@@ -1,0 +1,18 @@
+<div class='overflow-x-auto'>
+  <table class='w-full'>
+    <thead>
+      <tr class='bg-surface rounded-full'>
+        @each(column in columns)
+        <th class='p-5 rounded-full'>{{column}}</th>
+        @endeach
+      </tr>
+    </thead>
+    <tbody>
+      @each(value in values)
+      <tr class="hover:bg-surface p-5">
+        {{{ await $slots.main(value) }}}
+      </tr>
+      @endeach
+    </tbody>
+  </table>
+</div>

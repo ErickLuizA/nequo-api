@@ -46,9 +46,6 @@ Encore.setPublicPath('/assets')
 |
 */
 Encore.addEntry('app', './resources/js/app.js')
-
-Encore.addStyleEntry('styles', './resources/css/app.css')
-
 /*
 |--------------------------------------------------------------------------
 | Copy assets
@@ -171,7 +168,7 @@ Encore.configureDevServerOptions((options) => {
 | PostCSS or CSS.
 |
 */
-// Encore.enablePostCssLoader()
+Encore.enablePostCssLoader()
 // Encore.configureCssLoader(() => {})
 
 /*
