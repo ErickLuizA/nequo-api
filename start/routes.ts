@@ -53,11 +53,5 @@ Route.get('/', async ({ view }) => {
 })
 
 Route.resource('/quotes', 'QuotesController').only(['index', 'show', 'create', 'edit', 'destroy'])
-
-Route.get('/authors', async ({ view }) => {
-  return view.render('pages/authors/index')
-})
-
-Route.get('/tags', async ({ view }) => {
-  return view.render('pages/tags/index')
-})
+Route.resource('/authors', 'AuthorsController').only(['index', 'show', 'create', 'edit', 'destroy'])
+Route.resource('/tags', 'TagsController').only(['index', 'show', 'create', 'edit', 'destroy'])

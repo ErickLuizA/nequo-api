@@ -1,11 +1,37 @@
 @layout('layouts/main')
 
+@set('data', authors)
+
 @section('body')
 
 @include('partials/tabs')
 
-<div>
-  <h1>Hello Authors</h1>
-</div>
+@!component('components/search-input', {
+placeholder: 'Search authors...',
+action: route('authors.index'),
+value: request.qs().search,
+search_by: 'name'
+})
 
+<div class="data-table-target" up-main>
+  @component('components/data-table', {
+  columns: ['Id', 'Name', 'Bio', 'Created', 'Updated'],
+  values: authors,
+  })
+  @slot('main', data)
+
+  @!component('components/data-table-row', { value: data.id, href: route('authors.edit', [data.id]) })
+  @!component('components/data-table-row', { value: data.name, href: route('authors.edit', [data.id]) })
+  @!component('components/data-table-row', { value: data.bio, href: route('authors.edit', [data.id]) })
+  @!component('components/data-table-row', { value: data.createdAt.toRelative({style:'short'}),
+  href: route('authors.edit',[data.id]) })
+  @!component('components/data-table-row', { value: data.updatedAt.toRelative({style:'short'}), href:
+  route('authors.edit', [data.id]) })
+
+  @end
+  @end
+
+  @include('partials/pagination')
+
+</div>
 @endsection
