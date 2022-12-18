@@ -37,7 +37,6 @@
       "@adonisjs/repl",
       "@japa/preset-adonis/build/adonis-typings",
       "@adonisjs/lucid",
-      "@adonisjs/view"
     ]
   }
 }

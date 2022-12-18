@@ -1,6 +1,0 @@
-import 'unpoly'
-import 'unpoly/unpoly.css'
-import 'select-pure'
-import '../css/app.css'
-import './main'
-import './quotes'
