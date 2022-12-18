@@ -2,10 +2,10 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Quote from 'App/Models/Quote'
 import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
 import SearchQuoteService from 'App/Services/SearchQuoteService'
-import { createOrder, createPagination, createSearch, isApiRequest } from 'Utils/request'
+import { createOrder, createPagination, createSearch } from 'Utils/request'
 
 export default class QuotesController {
-  public async index({ request, response, route, view }: HttpContextContract) {
+  public async index({ request, response }: HttpContextContract) {
     const quotes = await Quote.query()
       .preload('author')
       .preload('tags', (builder) => {
@@ -15,19 +15,7 @@ export default class QuotesController {
       .orderBy(...createOrder(request, Quote.sortableColumns))
       .paginate(...createPagination(request))
 
-    if (isApiRequest(route)) {
-      return response.status(200).json(quotes)
-    }
-
-    quotes.baseUrl(route?.pattern ?? '')
-
-    return view.render('pages/quotes/index', { quotes })
-  }
-
-  public async edit({ params, view }: HttpContextContract) {
-    const quote = await Quote.findOrFail(params.id)
-
-    return view.render('pages/quotes/edit', { quote })
+    return response.status(200).json(quotes)
   }
 
   public async show({ params, response }: HttpContextContract) {
@@ -41,6 +29,12 @@ export default class QuotesController {
 
     return response.status(200).json(quote)
   }
+
+  public async store({ request, response }: HttpContextContract) {}
+
+  public async update({ params, request, response }: HttpContextContract) {}
+
+  public async destroy({ params, response }: HttpContextContract) {}
 
   public async quoteOfTheDay({ response }: HttpContextContract) {
     let quoteOfTheDay = await QuoteOfTheDay.query().orderBy('created_at', 'desc').first()

@@ -6,6 +6,11 @@
 
 @include('partials/tabs')
 
+@!component('components/add-button', {
+  route: route('quotes.create'),
+  label: 'Add Quote',
+})
+
 @!component('components/search-input', {
 placeholder: 'Search quotes...',
 action: route('quotes.index'),

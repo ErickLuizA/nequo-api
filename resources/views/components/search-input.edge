@@ -1,7 +1,7 @@
 <form method="GET" action="{{ action }}" class="relative mb-4 w-full">
   <i data-feather='search' class='text-placeholder absolute top-5 left-2.5'></i>
-  <input class="bg-surface w-full px-5 py-4 pl-10 text-xl rounded-md focus:outline-none focus:outline-primary"
-    type="search" name="{{ name || 'search' }}" id="search-input" placeholder="{{ placeholder || 'Search...' }}"
+  <input class="bg-surface w-full px-5 py-4 pl-10 text-xl rounded-md default-outline" type="search"
+    name="{{ name || 'search' }}" id="search-input" placeholder="{{ placeholder || 'Search...' }}"
     value="{{value || ''}}" up-autosubmit up-delay="1000">
   <input type="hidden" name="search_by" value="{{ search_by }}">
 </form>

@@ -1,32 +1,21 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import QuoteTag from 'App/Models/QuoteTag'
 import Tag from 'App/Models/Tag'
-import { createOrder, createPagination, createSearch, isApiRequest } from 'Utils/request'
+import { createOrder, createPagination, createSearch } from 'Utils/request'
 
 export default class TagsController {
-  public async index({ request, response, route, view }: HttpContextContract) {
+  public async index({ request, response }: HttpContextContract) {
     const tags = await Tag.query()
       .where((builder) => createSearch(request, builder, Tag.searchableColumns))
       .orderBy(...createOrder(request, Tag.sortableColumns))
       .paginate(...createPagination(request))
 
-    if (isApiRequest(route)) {
-      return response.status(200).json(tags)
-    }
-
-    tags.baseUrl(route?.pattern ?? '')
-
-    return view.render('pages/tags/index', { tags })
-  }
-
-  public async edit({ params, view }: HttpContextContract) {
-    const tag = await Tag.findOrFail(params.id)
-
-    return view.render('pages/tags/edit', { tag })
+    return response.status(200).json(tags)
   }
 
   public async show({ params, response }: HttpContextContract) {
     const tag = await Tag.findOrFail(params.id)
+
     return response.status(200).json(tag)
   }
 

@@ -2,9 +2,7 @@
 
 @section('body')
 
-<form class="flex flex-col" method="POST" action="{{ route('quotes.edit', [quote.id], {
-  qs: {_method: 'PUT'}
-}) }}">
+<form class="flex flex-col" method="POST" action="{{ route('quotes.store') }}">
 
   <a href="{{ route('quotes.index') }}" up-dismiss up-follow
     class="mb-8 flex items-center self-start -ml-2 p-2 hover:bg-surface rounded-md">
@@ -13,19 +11,18 @@
   </a>
 
   <div class="input-container">
-    <label class="input-label" for="id">Id</label>
-    <input id="id" name="id" type="text" disabled class="input" value="{{ quote.id }}">
-  </div>
-
-  <div class="input-container">
     <label class="input-label" for="content">Content</label>
-    <textarea id="content" name="content" rows="5" class="input">{{ quote.content }}</textarea>
+    <textarea id="content" name="content" rows="5" class="input" required></textarea>
   </div>
 
   <div class="input-container">
     <label class="input-label" for="author">Author</label>
-    <input id="author" name="author" type="text" class="input" value="{{ quote.author.name }}">
-    <input id="author_id" name="author_id" type="hidden" value="{{ quote.author.id }}">
+    <select id="author-list" class="author-list">
+      <option value="">Select an author</option>
+      @each(author in authors)
+      <option value="{{ author.id }}">{{ author.name }}</option>
+      @endeach
+    </select>
   </div>
 
   <div class="input-container">
@@ -37,15 +34,7 @@
     </div>
 
     <div id="tags-container" class="flex flex-wrap">
-      @each(tag in quote.tags)
-      <div data-tag class="tag-container">
-        <input type="text" class="input w-auto" disabled value="{{ tag.tag.name }}">
-        <input type="hidden" name="tags[]" value="{{ tag.tag.id }}">
-        <button type="button" class="ml-2 hidden" up-layer="new">
-          <i data-feather="x" class="w-4"></i>
-        </button>
-      </div>
-      @endeach
+
     </div>
   </div>
 
