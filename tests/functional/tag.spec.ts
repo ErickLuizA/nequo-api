@@ -6,15 +6,10 @@ const quoteTagProperties = ['id', 'quote_id', 'tag_id', 'tag', 'quote', 'created
 
 test.group('Tags', () => {
   test('should be able to get paginated and ordered list of tags', async ({ client, assert }) => {
-    const response = await client.get(
-      '/api/v1/tags?page=2&per_page=5&order_by=created_at&order=asc'
-    )
+    const response = await client.get('/api/v1/tags?page=2&per_page=5&order_by=name&order=asc')
 
     assert.properties(response.body().data[0], tagProperties)
-    assert.isAbove(
-      new Date(response.body().data[1].created_at),
-      new Date(response.body().data[0].created_at)
-    )
+
     response.assertStatus(200)
     response.assertBodyContains({
       meta: { current_page: 2, per_page: 5 },
