@@ -2,6 +2,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Quote from 'App/Models/Quote'
 import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
 import SearchQuoteService from 'App/Services/SearchQuoteService'
+import StoreQuoteValidator from 'App/Validators/Quotes/StoreQuoteValidator'
+import UpdateQuoteValidator from 'App/Validators/Quotes/UpdateQuoteValidator'
 import { createOrder, createPagination, createSearch } from 'Utils/request'
 
 export default class QuotesController {
@@ -30,11 +32,43 @@ export default class QuotesController {
     return response.status(200).json(quote)
   }
 
-  public async store({ request, response }: HttpContextContract) {}
+  public async store({ request, response }: HttpContextContract) {
+    const payload = await request.validate(StoreQuoteValidator)
 
-  public async update({ params, request, response }: HttpContextContract) {}
+    const quote = await Quote.create({
+      content: payload.content,
+      authorId: payload.authorId,
+    })
 
-  public async destroy({ params, response }: HttpContextContract) {}
+    if (payload.tags) {
+      await quote
+        .related('tags')
+        .createMany(payload.tags.map((tagId) => ({ tagId, quoteId: quote.id })))
+    }
+
+    return response.status(201).json(quote)
+  }
+
+  public async update({ params, request, response }: HttpContextContract) {
+    const quote = await Quote.findOrFail(params.id)
+
+    const payload = await request.validate(UpdateQuoteValidator)
+
+    quote.content = payload.content
+    quote.authorId = payload.authorId
+
+    await quote.save()
+
+    return response.status(200).json(quote)
+  }
+
+  public async destroy({ params, response }: HttpContextContract) {
+    const quote = await Quote.findOrFail(params.id)
+
+    await quote.delete()
+
+    return response.status(204).send('')
+  }
 
   public async quoteOfTheDay({ response }: HttpContextContract) {
     let quoteOfTheDay = await QuoteOfTheDay.query().orderBy('created_at', 'desc').first()

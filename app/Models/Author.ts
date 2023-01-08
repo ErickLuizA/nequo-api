@@ -24,8 +24,17 @@ export default class Author extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
+  @column.dateTime()
+  public deletedAt: DateTime
+
   @hasMany(() => Quote)
   public quotes: HasMany<typeof Quote>
+
+  public async delete() {
+    this.deletedAt = DateTime.local()
+
+    await this.save()
+  }
 
   public static sortableColumns: string[] = ['id', 'name', 'slug', 'created_at', 'updated_at']
 

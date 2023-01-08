@@ -6,6 +6,7 @@ import QuoteTag from 'App/Models/QuoteTag'
 import { DateTime } from 'luxon'
 
 const quoteProperties = ['id', 'content', 'author_id', 'author', 'tags', 'created_at', 'updated_at']
+const createdQuoteProperties = ['id', 'content', 'author_id', 'created_at', 'updated_at']
 const quoteOfTheDayProperties = ['id', 'quote_id', 'quote', 'created_at', 'updated_at']
 
 test.group('Quotes', () => {
@@ -114,5 +115,102 @@ test.group('Quotes', () => {
         tagId: 2,
       },
     ])
+  })
+
+  test('should create quote', async ({ client, assert }) => {
+    const request = client.post('/api/v1/quotes')
+
+    request.json({
+      content: 'Testing Content',
+      authorId: 1,
+    })
+
+    const response = await request
+
+    assert.properties(response.body(), createdQuoteProperties)
+    response.assertStatus(201)
+    assert.deepEqual(response.body().content, 'Testing Content')
+    assert.deepEqual(response.body().author_id, 1)
+  })
+
+  test('should fail to create quote if validation fails', async ({ client, assert }) => {
+    const request = client.post('/api/v1/quotes')
+
+    const response = await request
+
+    assert.properties(response.body(), ['code', 'message', 'errors'])
+    response.assertStatus(422)
+    response.assertBodyContains({
+      code: ExceptionCode.E_VALIDATION_FAILURE,
+      message: ExceptionMessage.E_VALIDATION_FAILURE,
+    })
+  })
+
+  test('should update quote', async ({ client, assert }) => {
+    const request = client.put('/api/v1/quotes/1')
+
+    request.json({
+      content: 'Testing Content Updated',
+      authorId: 1,
+    })
+
+    const response = await request
+
+    assert.properties(response.body(), createdQuoteProperties)
+    response.assertStatus(200)
+    response.assertBodyContains({
+      id: 1,
+      content: 'Testing Content Updated',
+      author_id: 1,
+      created_at: response.body().created_at,
+      updated_at: response.body().updated_at,
+    })
+  })
+
+  test('should fail to update quote if validation fails', async ({ client, assert }) => {
+    const request = client.put('/api/v1/quotes/1')
+
+    const response = await request
+
+    assert.properties(response.body(), ['code', 'message', 'errors'])
+    response.assertStatus(422)
+    response.assertBodyContains({
+      code: ExceptionCode.E_VALIDATION_FAILURE,
+      message: ExceptionMessage.E_VALIDATION_FAILURE,
+    })
+  })
+
+  test('should fail to update quote if it does not exist', async ({ client, assert }) => {
+    const request = client.put('/api/v1/quotes/0')
+
+    request.json({
+      content: 'Testing Content Updated',
+      authorId: 1,
+    })
+
+    const response = await request
+
+    assert.properties(response.body(), ['code', 'message'])
+    response.assertStatus(404)
+    response.assertBodyContains({
+      code: ExceptionCode.E_ROW_NOT_FOUND,
+      message: ExceptionMessage.E_ROW_NOT_FOUND,
+    })
+  })
+
+  test('should delete quote', async ({ client }) => {
+    const response = await client.delete('/api/v1/quotes/1')
+
+    response.assertStatus(204)
+  })
+
+  test('should fail to delete quote if it does not exist', async ({ client }) => {
+    const response = await client.delete('/api/v1/quotes/0')
+
+    response.assertStatus(404)
+    response.assertBodyContains({
+      code: ExceptionCode.E_ROW_NOT_FOUND,
+      message: ExceptionMessage.E_ROW_NOT_FOUND,
+    })
   })
 })

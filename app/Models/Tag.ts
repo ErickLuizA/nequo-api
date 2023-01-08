@@ -20,6 +20,15 @@ export default class Tag extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
+  @column.dateTime()
+  public deletedAt: DateTime
+
+  public async delete() {
+    this.deletedAt = DateTime.local()
+
+    await this.save()
+  }
+
   public static sortableColumns: string[] = ['id', 'name', 'slug', 'created_at', 'updated_at']
 
   public static searchableColumns: string[] = ['name', 'slug']

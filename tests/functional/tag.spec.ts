@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import { ExceptionCode, ExceptionMessage } from 'App/Constants/Exception'
 
-const tagProperties = ['id', 'name', 'slug', 'created_at', 'updated_at']
+const tagProperties = ['id', 'name', 'slug', 'created_at', 'updated_at', 'deleted_at']
 const quoteTagProperties = ['id', 'quote_id', 'tag_id', 'tag', 'quote', 'created_at', 'updated_at']
 
 test.group('Tags', () => {

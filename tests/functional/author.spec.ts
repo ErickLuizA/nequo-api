@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import { ExceptionCode, ExceptionMessage } from 'App/Constants/Exception'
 
-const authorProperties = ['id', 'name', 'slug', 'bio', 'created_at', 'updated_at']
+const authorProperties = ['id', 'name', 'slug', 'bio', 'created_at', 'updated_at', 'deleted_at']
 
 test.group('Authors', () => {
   test('should be able to get paginated and ordered list of authors', async ({

@@ -13,9 +13,9 @@
 |
 */
 
-import Logger from '@ioc:Adonis/Core/Logger'
-import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler'
+import Logger from '@ioc:Adonis/Core/Logger'
 import { exceptionCodeToMessageMap } from 'App/Constants/Exception'
 
 export default class ExceptionHandler extends HttpExceptionHandler {
@@ -33,6 +33,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     return ctx.response.status(status).json({
       code,
       message,
+      ...(error.messages?.errors && { errors: error.messages.errors }),
     })
   }
 }
