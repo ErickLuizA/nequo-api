@@ -4,6 +4,7 @@ import Quote from 'App/Models/Quote'
 import QuoteOfTheDay from 'App/Models/QuoteOfTheDay'
 import QuoteTag from 'App/Models/QuoteTag'
 import { DateTime } from 'luxon'
+import { randomUUID } from 'node:crypto'
 
 const quoteProperties = ['id', 'content', 'author_id', 'author', 'tags', 'created_at', 'updated_at']
 const createdQuoteProperties = ['id', 'content', 'author_id', 'created_at', 'updated_at']
@@ -120,8 +121,10 @@ test.group('Quotes', () => {
   test('should create quote', async ({ client, assert }) => {
     const request = client.post('/api/v1/quotes')
 
+    const content = 'Testing Content ' + randomUUID()
+
     request.json({
-      content: 'Testing Content',
+      content,
       authorId: 1,
     })
 
@@ -129,7 +132,7 @@ test.group('Quotes', () => {
 
     assert.properties(response.body(), createdQuoteProperties)
     response.assertStatus(201)
-    assert.deepEqual(response.body().content, 'Testing Content')
+    assert.deepEqual(response.body().content, content)
     assert.deepEqual(response.body().author_id, 1)
   })
 
